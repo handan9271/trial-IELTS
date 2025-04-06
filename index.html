@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>GPT 雅思写作与口语助教</title>
+</head>
+<body>
+    <h1>🎓 GPT 雅思写作与口语助教</h1>
+
+    <label for="question">请选择题目：</label>
+    <select id="question">
+        <option>Describe a piece of technology you own that is difficult to use.</option>
+        <option>Describe a person you know who often helps others.</option>
+        <option>Describe a time you received positive feedback.</option>
+        <option>Describe a goal you want to achieve in the future.</option>
+        <option>Describe something you did that made you feel proud.</option>
+    </select>
+
+    <br><br>
+    <label for="input">请输入你的中文思路：</label><br>
+    <textarea id="input" rows="6" cols="60">我在一次英语演讲比赛中获得了评委的表扬，让我增强了信心。</textarea>
+    <br><br>
+
+    <button onclick="send()">📝 生成英文反馈</button>
+    <br><br>
+
+    <div id="result" style="white-space: pre-wrap; border: 1px solid #ccc; padding: 10px;"></div>
+
+    <script>
+        async function send() {
+            const question = document.getElementById("question").value;
+            const input = document.getElementById("input").value;
+            const result = document.getElementById("result");
+            result.innerText = "⏳ 正在生成，请稍候...";
+            try {
+                const res = await fetch("/api/ielts-helper", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ question, input })
+                });
+                const data = await res.json();
+                result.innerText = data.reply || "❌ 没有返回结果";
+            } catch (err) {
+                result.innerText = "❌ 请求失败：" + err.message;
+            }
+        }
+    </script>
+</body>
+</html>
