@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>GPT 雅思写作与口语助教</title>
+</head>
+<body>
+  <h2>🎯 GPT 雅思写作与口语助教</h2>
+  <label>选择题目：</label>
+  <select id="question">
+    <option>Describe a piece of technology you own that is difficult to use.</option>
+    <option>Describe a person you know who often helps others.</option>
+    <option>Describe a time you received positive feedback.</option>
+    <option>Describe a goal you want to achieve in the future.</option>
+    <option>Describe something you did that made you feel proud.</option>
+  </select>
+  <br />
+  <label>你的中文思路：</label>
+  <br />
+  <textarea id="input" rows="6" cols="60">你好</textarea>
+  <br />
+  <button onclick="generate()">🎬 生成英文反馈</button>
+  <pre id="output"></pre>
+  <script>
+    async function generate() {
+      const question = document.getElementById("question").value;
+      const input = document.getElementById("input").value;
+      const output = document.getElementById("output");
+      output.textContent = "⏳ 正在生成中，请稍候...";
+      try {
+        const response = await fetch("/api/ielts-helper", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ question, input })
+        });
+        const data = await response.json();
+        output.textContent = data.reply || JSON.stringify(data);
+      } catch (err) {
+        output.textContent = "❌ 出错了：" + err;
+      }
+    }
+  </script>
+</body>
+</html>
