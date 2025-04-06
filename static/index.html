@@ -26,24 +26,35 @@
 
     <div id="result" style="white-space: pre-wrap; border: 1px solid #ccc; padding: 10px;"></div>
 
-    <script>
-        async function send() {
-            const question = document.getElementById("question").value;
-            const input = document.getElementById("input").value;
-            const result = document.getElementById("result");
-            result.innerText = "⏳ 正在生成，请稍候...";
-            try {
-                const res = await fetch("/api/ielts-helper", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ question, input })
-                });
-                const data = await res.json();
-                result.innerText = data.reply || "❌ 没有返回结果";
-            } catch (err) {
-                result.innerText = "❌ 请求失败：" + err.message;
-            }
+  <script>
+document.getElementById("submit").addEventListener("click", async () => {
+    const question = document.getElementById("question").value;
+    const input = document.getElementById("input").value;
+    const resultDiv = document.getElementById("result");
+
+    resultDiv.innerHTML = "⏳ 正在生成，请稍候...";
+
+    try {
+        const response = await fetch("/api/ielts-helper", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ question, input })
+        });
+
+        if (!response.ok) {
+            throw new Error("服务器返回错误：" + response.status);
         }
-    </script>
+
+        const data = await response.json();
+        resultDiv.innerHTML = "<pre>" + data.reply + "</pre>";
+    } catch (err) {
+        console.error(err);
+        resultDiv.innerHTML = "❌ 没有返回结果<br>" + err.message;
+    }
+});
+</script>
+    
 </body>
 </html>
