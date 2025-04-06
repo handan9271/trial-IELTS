@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>GPT 雅思写作与口语助教</title>
+</head>
+<body>
+    <h1>GPT 雅思写作与口语助教</h1>
+    <label>选择题目：</label>
+    <input id="question" type="text" value="Describe a piece of technology you own that is difficult to use." />
+    <br />
+    <label>你的中文思路：</label><br />
+    <textarea id="input" rows="6" cols="50">你好</textarea><br />
+    <button onclick="send()">生成英文反馈</button>
+    <pre id="result"></pre>
+    <script>
+        async function send() {
+            const question = document.getElementById("question").value;
+            const input = document.getElementById("input").value;
+            const result = document.getElementById("result");
+            result.textContent = "加载中...";
+            try {
+                const res = await fetch("/api/ielts-helper", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ question, input })
+                });
+                const data = await res.json();
+                result.textContent = data.reply;
+            } catch (err) {
+                result.textContent = "请求失败，请检查网络或服务器设置。";
+            }
+        }
+    </script>
+</body>
+</html>
